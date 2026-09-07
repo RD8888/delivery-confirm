@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Delivery Confirmation</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      padding: 30px;
+    }
+
+    .card {
+      max-width: 500px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      font-size: 24px;
+    }
+
+    button {
+      padding: 12px 24px;
+      font-size: 16px;
+      margin-top: 15px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 100px;
+    }
+
+    .option {
+      margin-right: 20px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="card">
+
+  <h1>Delivery Confirmation</h1>
+
+  <p>
+    Order:
+    <strong id="orderDisplay"></strong>
+  </p>
+
+  <form method="POST" action="https://webhooks.workato.com/webhooks/rest/300da1f2-64e4-4e2f-a651-875b583095d9/testtwilioresponse">
+
+    <input
+      type="hidden"
+      name="OrderNumber"
+      id="OrderNumber">
+
+    <p>Can you accept this delivery?</p>
+
+    <label class="option">
+      <input
+        type="radio"
+        name="Response"
+        value="Yes"
+        required>
+      Yes
+    </label>
+
+    <label class="option">
+      <input
+        type="radio"
+        name="Response"
+        value="No"
+        required>
+      No
+    </label>
+
+    <br><br>
+
+    <label>Additional message</label>
+    <br><br>
+
+    <textarea name="Message"></textarea>
+
+    <br>
+
+    <button type="submit">
+      Submit
+    </button>
+
+  </form>
+
+</div>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const order = params.get("order");
+
+  document.getElementById("OrderNumber").value = order || "";
+  document.getElementById("orderDisplay").textContent = order || "Not provided";
+</script>
+
+</body>
+</html>
