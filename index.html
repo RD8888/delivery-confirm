@@ -1,109 +1,362 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Delivery Confirmation</title>
+
+  <title>Hume Doors & Timber - Delivery Confirmation</title>
 
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      background: #f4f4f4;
-      padding: 30px;
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, Helvetica, sans-serif;
+
+      background:
+        linear-gradient(
+          rgba(0, 0, 0, 0.58),
+          rgba(0, 0, 0, 0.58)
+        ),
+        url("doors-bg.png");
+
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      padding: 24px;
     }
 
     .card {
-      max-width: 500px;
-      margin: auto;
-      background: white;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 520px;
+
+      background: rgba(255, 255, 255, 0.97);
+
+      border-radius: 16px;
+      padding: 34px;
+
+      box-shadow:
+        0 12px 35px rgba(0, 0, 0, 0.28);
+
+      text-align: center;
+    }
+
+    .logo {
+      max-width: 190px;
+      max-height: 75px;
+      margin-bottom: 18px;
     }
 
     h1 {
-      font-size: 24px;
+      margin: 0 0 8px 0;
+      font-size: 27px;
+      color: #222;
     }
 
-    button {
-      padding: 12px 24px;
-      font-size: 16px;
-      margin-top: 15px;
+    .subtitle {
+      margin: 0 0 28px 0;
+      color: #666;
+      font-size: 15px;
+    }
+
+    .order-box {
+      background: #f4f4f4;
+      border-radius: 9px;
+
+      padding: 14px 18px;
+      margin-bottom: 26px;
+
+      font-size: 17px;
+    }
+
+    .order-number {
+      font-weight: bold;
+      font-size: 19px;
+    }
+
+    .question {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 18px;
+      color: #333;
+    }
+
+    .response-options {
+      display: flex;
+      gap: 14px;
+
+      margin-bottom: 28px;
+    }
+
+    .response-options label {
+      flex: 1;
+      cursor: pointer;
+    }
+
+    .response-options input {
+      display: none;
+    }
+
+    .option-button {
+      display: block;
+
+      padding: 15px;
+      border-radius: 9px;
+
+      border: 2px solid #ccc;
+
+      font-size: 17px;
+      font-weight: bold;
+
+      transition: 0.2s;
+    }
+
+    .response-options input:checked + .option-button {
+      border-color: #222;
+      background: #222;
+      color: white;
+    }
+
+    .message-label {
+      display: block;
+      text-align: left;
+
+      font-weight: bold;
+      margin-bottom: 8px;
+
+      color: #333;
     }
 
     textarea {
       width: 100%;
-      min-height: 100px;
+      min-height: 105px;
+
+      padding: 12px;
+
+      border: 1px solid #ccc;
+      border-radius: 8px;
+
+      resize: vertical;
+      font-family: inherit;
+      font-size: 15px;
+
+      margin-bottom: 22px;
     }
 
-    .option {
-      margin-right: 20px;
+    textarea:focus {
+      outline: none;
+      border-color: #555;
+    }
+
+    .submit-button {
+      width: 100%;
+
+      border: none;
+      border-radius: 9px;
+
+      padding: 15px;
+
+      font-size: 17px;
+      font-weight: bold;
+
+      cursor: pointer;
+
+      background: #222;
+      color: white;
+
+      transition: 0.2s;
+    }
+
+    .submit-button:hover {
+      background: #444;
+    }
+
+    .footer {
+      margin-top: 22px;
+
+      font-size: 12px;
+      color: #888;
+    }
+
+    .error {
+      display: none;
+
+      background: #fff1f1;
+      color: #a40000;
+
+      border-radius: 8px;
+      padding: 12px;
+
+      margin-bottom: 20px;
+
+      font-size: 14px;
+    }
+
+    @media (max-width: 520px) {
+
+      body {
+        padding: 14px;
+      }
+
+      .card {
+        padding: 26px 20px;
+      }
+
+      .logo {
+        max-width: 160px;
+      }
+
+      h1 {
+        font-size: 23px;
+      }
+
+      .response-options {
+        flex-direction: column;
+      }
     }
   </style>
 </head>
 
 <body>
 
-<div class="card">
+  <div class="card">
 
-  <h1>Delivery Confirmation</h1>
+    <img
+      src="logo.png"
+      alt="Hume Doors & Timber"
+      class="logo"
+    >
 
-  <p>
-    Order:
-    <strong id="orderDisplay"></strong>
-  </p>
+    <h1>Delivery Confirmation</h1>
 
-  <form method="POST" action="https://webhooks.workato.com/webhooks/rest/300da1f2-64e4-4e2f-a651-875b583095d9/testtwilioresponse">
+    <p class="subtitle">
+      Please confirm whether you are able to accept your scheduled delivery.
+    </p>
 
-    <input
-      type="hidden"
-      name="OrderNumber"
-      id="OrderNumber">
+    <div id="errorMessage" class="error">
+      The order number is missing from this link.
+      Please contact Hume Doors & Timber.
+    </div>
 
-    <p>Can you accept this delivery?</p>
+    <div class="order-box">
+      Order Number:
+      <span id="orderDisplay" class="order-number"></span>
+    </div>
 
-    <label class="option">
+    <form
+      id="deliveryForm"
+      method="POST"
+      action="https://webhooks.workato.com/webhooks/rest/300da1f2-64e4-4e2f-a651-875b583095d9/testtwilioresponse"
+    >
+
       <input
-        type="radio"
-        name="Response"
-        value="Yes"
-        required>
-      Yes
-    </label>
+        type="hidden"
+        name="OrderNumber"
+        id="OrderNumber"
+      >
 
-    <label class="option">
-      <input
-        type="radio"
-        name="Response"
-        value="No"
-        required>
-      No
-    </label>
+      <div class="question">
+        Can you accept this delivery?
+      </div>
 
-    <br><br>
+      <div class="response-options">
 
-    <label>Additional message</label>
-    <br><br>
+        <label>
+          <input
+            type="radio"
+            name="Response"
+            value="Yes"
+            required
+          >
 
-    <textarea name="Message"></textarea>
+          <span class="option-button">
+            Yes
+          </span>
+        </label>
 
-    <br>
+        <label>
+          <input
+            type="radio"
+            name="Response"
+            value="No"
+            required
+          >
 
-    <button type="submit">
-      Submit
-    </button>
+          <span class="option-button">
+            No
+          </span>
+        </label>
 
-  </form>
+      </div>
 
-</div>
+      <label
+        for="Message"
+        class="message-label"
+      >
+        Additional message
+      </label>
 
-<script>
-  const params = new URLSearchParams(window.location.search);
-  const order = params.get("order");
+      <textarea
+        id="Message"
+        name="Message"
+        placeholder="Optional - please provide any delivery instructions or other information."
+      ></textarea>
 
-  document.getElementById("OrderNumber").value = order || "";
-  document.getElementById("orderDisplay").textContent = order || "Not provided";
-</script>
+      <button
+        type="submit"
+        class="submit-button"
+      >
+        Submit Response
+      </button>
+
+    </form>
+
+    <div class="footer">
+      Hume Doors & Timber
+    </div>
+
+  </div>
+
+  <script>
+
+    const params = new URLSearchParams(window.location.search);
+    const order = params.get("order");
+
+    const orderDisplay =
+      document.getElementById("orderDisplay");
+
+    const orderInput =
+      document.getElementById("OrderNumber");
+
+    const form =
+      document.getElementById("deliveryForm");
+
+    const errorMessage =
+      document.getElementById("errorMessage");
+
+    if (order && order.trim() !== "") {
+
+      orderDisplay.textContent = order;
+      orderInput.value = order;
+
+    } else {
+
+      orderDisplay.textContent = "Not provided";
+
+      errorMessage.style.display = "block";
+
+      form.style.display = "none";
+    }
+
+  </script>
 
 </body>
 </html>
